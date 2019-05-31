@@ -1,0 +1,114 @@
+{load_file("nrngui.hoc")}
+objectvar save_window_, rvp_
+objectvar scene_vector_[7]
+objectvar ocbox_, ocbox_list_, scene_, scene_list_
+{ocbox_list_ = new List()  scene_list_ = new List()}
+{pwman_place(0,0,0)}
+
+//Begin PointProcessGroupManager
+{
+load_file("pointgrp.hoc")
+}
+{
+ocbox_ = new PointProcessGroupManager(0)
+}
+{object_push(ocbox_)}
+{
+ms = new MechanismStandard("IClamp")
+ms.set("del", 5, 0)
+ms.set("dur", 1, 0)
+ms.set("amp", 1, 0)
+mnews("IClamp", ms)
+select(0)
+execute("PRE ocbox_.move(0.5)")
+ms = new MechanismStandard("VClamp")
+ms.set("dur", 3510, 0)
+ms.set("dur", 1000, 1)
+ms.set("dur", 1000, 2)
+ms.set("amp", -60, 0)
+ms.set("amp", 40, 1)
+ms.set("amp", -60, 2)
+ms.set("gain", 100000, 0)
+ms.set("rstim", 1, 0)
+ms.set("tau1", 0.001, 0)
+ms.set("tau2", 0, 0)
+ms.set("e0", 0.000599957, 0)
+ms.set("vo0", -59.9957, 0)
+ms.set("vi0", -59.9988, 0)
+ms.set("fac", 0, 0)
+mnews("VClamp", ms)
+select(1)
+execute("POST ocbox_.move(0.5)")
+}
+{object_pop() doNotify()}
+{
+ocbox_ = ocbox_.v1
+ocbox_.map("PointProcessGroupManager", 324, 444, 564.3, 344.7)
+}
+objref ocbox_
+//End PointProcessGroupManager
+
+{
+xpanel("RunControl", 0)
+v_init = -65
+xvalue("Init","v_init", 1,"stdinit()", 1, 1 )
+xbutton("Init & Run","run()")
+xbutton("Stop","stoprun=1")
+runStopAt = 5
+xvalue("Continue til","runStopAt", 1,"{continuerun(runStopAt) stoprun=1}", 1, 1 )
+runStopIn = 1
+xvalue("Continue for","runStopIn", 1,"{continuerun(t + runStopIn) stoprun=1}", 1, 1 )
+xbutton("Single Step","steprun()")
+t = 6000
+xvalue("t","t", 2 )
+tstop = 6000
+xvalue("Tstop","tstop", 1,"tstop_changed()", 0, 1 )
+dt = 0.025
+xvalue("dt","dt", 1,"setdt()", 0, 1 )
+steps_per_ms = 40
+xvalue("Points plotted/ms","steps_per_ms", 1,"setdt()", 0, 1 )
+xcheckbox("Quiet",&stdrun_quiet,"")
+realtime = 24
+xvalue("Real Time","realtime", 0,"", 0, 1 )
+xpanel(37,390)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,6000,-70,40)
+scene_vector_[3] = save_window_
+{save_window_.view(0, -70, 6000, 110, 372, 44, 300.6, 200.8)}
+graphList[0].append(save_window_)
+save_window_.save_name("graphList[0].")
+save_window_.addvar("POST.v( 0.5 )", 1, 1, 0.694569, 0.947923, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(-100,6000,-1e-06,6e-05)
+scene_vector_[4] = save_window_
+{save_window_.view(-100, -1e-06, 6100, 6.1e-05, 692, 43, 300.6, 200.8)}
+graphList[1].append(save_window_)
+save_window_.save_name("graphList[1].")
+save_window_.addvar("NMDA_Mg[0].i", 3, 1, 0.633866, 1.33131, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,6000,-70,460)
+scene_vector_[5] = save_window_
+{save_window_.view(0, -70, 6000, 530, 908, 310, 185.4, 207.1)}
+graphList[1].append(save_window_)
+save_window_.save_name("graphList[1].")
+save_window_.addvar("PRE.v( 0.5 )", 1, 1, 0.8, 0.9, 2)
+}
+{
+save_window_ = new Graph(0)
+save_window_.size(0,6000,-0.0210808,0.0358109)
+scene_vector_[6] = save_window_
+{save_window_.view(0, -0.0210808, 6000, 0.0568917, 36, 123, 300.6, 200.8)}
+graphList[2].append(save_window_)
+save_window_.save_name("graphList[2].")
+save_window_.addvar("NMDA_Mg[0].O", 1, 1, 0.633866, 0.971885, 2)
+save_window_.addexpr("NMDA_Mg[0].Cl", 2, 1, 0.64984, 0.971885, 2)
+save_window_.addexpr("NMDA_Mg[0].OMg", 3, 1, 0.592332, 0.9623, 2)
+}
+objectvar scene_vector_[1]
+{doNotify()}
