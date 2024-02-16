@@ -18,7 +18,7 @@ glutamate binding to the receptor.
 
 Kinetic model from Kampa et al (2004) Kinetics of Mg2+ unblock of NMDA 
 receptors: implications for spike-timing dependent synaptic plasticity. 
-In: J Physiol 556.2: pp 337–345.
+In: J Physiol 556.2: pp 337â€“345.
 --------------------------------
-Model written by Bjoern Kampa, Canberra, 2004 
+Model written by Bjoern Kampa, Canberra, 2004
 
